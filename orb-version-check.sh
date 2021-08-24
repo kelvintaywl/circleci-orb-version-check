@@ -2,6 +2,7 @@
 
 set -e
 
+CIRCLE_WORKING_DIRECTORY="${CIRCLE_WORKING_DIRECTORY:-/home/circleci/project}"
 CIRCLECI_CONFIG=${CIRCLE_WORKING_DIRECTORY}/.circleci/config.yml
 
 if [ -f "$CIRCLECI_CONFIG" ]
