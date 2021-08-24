@@ -1,0 +1,8 @@
+{
+	"operationName": "OrbDetailsQuery",
+	"variables": {
+		"name": "codecov/codecov",
+		"orbVersionRef": "codecov/codecov@volatile"
+	},
+	"query": "query OrbDetailsQuery($name: String, $orbVersionRef: String) {\r\n  orbVersion(orbVersionRef: $orbVersionRef) {\r\n    id\r\n    version\r\n  }\r\n}\r\n"
+}
