@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 CIRCLE_WORKING_DIRECTORY="${CIRCLE_WORKING_DIRECTORY:-/home/circleci/project}"
 CIRCLECI_CONFIG=${CIRCLE_WORKING_DIRECTORY}/.circleci/config.yml
 
@@ -9,7 +7,7 @@ if [ -f "$CIRCLECI_CONFIG" ]
 then
   echo "CircleCI config is found @ ${CIRCLECI_CONFIG}!"
 else
-  echo "CircleCI config not found. Please make sure it is a valid file."
+  echo "CircleCI config not found @ ${CIRCLECI_CONFIG}!. Please make sure it is a valid file."
   exit 1
 fi
 
@@ -30,7 +28,8 @@ function get_latest_orb_version() {
 
   # generate the GraphQL query needed to confirm what is the latest available version for this orb.
   # @volatile is alias to latest version available for this CircleCI orb
-  local CURL_PAYLOAD=$(jq -c --arg ORB $ORB_NAME '.variables.name = $ORB | .variables.orbVersionRef = ($ORB + "@volatile")' curl_payload.json)
+  local CURDIR=$(dirname $0)
+  local CURL_PAYLOAD=$(jq -c --arg ORB $ORB_NAME '.variables.name = $ORB | .variables.orbVersionRef = ($ORB + "@volatile")' "${CURDIR}/curl_payload.json")
   local CURL_RESPONSE=$(curl -s -X POST -H 'Content-Type: application/json' https://circleci.com/graphql-unstable -d "$CURL_PAYLOAD")
   local VERSION_LATEST_AVAILABLE=$(echo $CURL_RESPONSE | jq -r '.data.orbVersion.version')
 
@@ -61,7 +60,7 @@ done
 
 if [ $NUM_OUTDATED -gt 0 ]
 then
-  exit 1
+  exit $NUM_OUTDATED
 else
   echo "All orbs found are using the latest versions available. Nice one, mate!"
 fi

@@ -2,9 +2,9 @@ FROM cimg/base:stable
 
 LABEL author="github.com/kelvintaywl"
 
-WORKDIR /tmp
+WORKDIR /home/circleci
 
-COPY orb-version-check.sh ./
-COPY curl_payload.json ./
+COPY orb-version-check.sh /tmp/
+COPY curl_payload.json /tmp/
 
-CMD ./orb-version-check.sh
+CMD /tmp/orb-version-check.sh
