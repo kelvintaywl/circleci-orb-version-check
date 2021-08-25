@@ -34,15 +34,21 @@ function get_latest_orb_version() {
   local VERSION_LATEST_AVAILABLE=$(echo $CURL_RESPONSE | jq -r '.data.orbVersion.version')
 
   # TODO: it is better to use a semver tool to validate if $VERSION_USED is outdated (< $VERSION_LATEST_AVAILABLE)
-  if [ "$VERSION_USED" != "$VERSION_LATEST_AVAILABLE" ]; then
+  if [ "$VERSION_USED" != "$VERSION_LATEST_AVAILABLE" ]
+  then
     echo "Consider upgrading ${ORB_NAME} version: ${VERSION_USED} -> ${VERSION_LATEST_AVAILABLE}"
     return 1
   fi
 }
 
-# Ultimately, the committed repository needs to have a CircleCI config at .circleci/config.yml
-# See https://support.circleci.com/hc/en-us/articles/360056463852-Can-I-split-a-config-into-multiple-files-
-ORBS=$(yq e -j '.orbs' $CIRCLECI_CONFIG | jq -r 'to_entries | map(.value) | join(" ")')
+ORBS=$(yq e -j '.orbs' $CIRCLECI_CONFIG | jq .)
+if [ "$ORBS" == "null" ]
+then
+  echo "No imported orbs found. Exiting early!"
+  exit 0
+fi
+
+ORBS=$(echo $ORBS | jq -r 'to_entries | map(.value) | join(" ")')
 
 NUM_OUTDATED=0
 
