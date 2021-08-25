@@ -8,5 +8,8 @@ workflows:
   docker_deploy:
     jobs:
       - docker/publish:
+          lint-dockerfile: true
+          update-description: true
+          tag: "${CIRCLE_SHA1},latest"
           image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
           context: docker
