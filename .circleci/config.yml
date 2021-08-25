@@ -1,0 +1,20 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@1.7.0
+
+jobs:
+  docker_check_build:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/check
+      - docker/build:
+          image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+
+workflows:
+  version: 2
+  validate_dockerized_solution:
+    jobs:
+      - docker_check_build:
+          context: docker
