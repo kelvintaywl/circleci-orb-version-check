@@ -39,6 +39,11 @@ workflows:
       - check_orbs
 ```
 
+This tool dog-foods itself, and you can see it in action in [this CircleCI build for example](https://app.circleci.com/pipelines/github/kelvintaywl/circleci-orb-version-check/9/workflows/924f9369-2f82-4066-a715-72f237ea4161/jobs/13).
+
+![dogfooding in CircleCI](assets/dogfooding_success.png)
+
+
 ## Explain
 
 The main "magic" of this script is to lookup the current latest versions of the imported CircleCI orbs.
