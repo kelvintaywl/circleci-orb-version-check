@@ -7,7 +7,7 @@ CIRCLECI_CONFIG=${CIRCLE_WORKING_DIRECTORY}/.circleci/config.yml
 
 if [ -f "$CIRCLECI_CONFIG" ]
 then
-  echo "CircleCI config  is found @ ${CIRCLECI_CONFIG}!"
+  echo "CircleCI config is found @ ${CIRCLECI_CONFIG}!"
 else
   echo "CircleCI config not found. Please make sure it is a valid file."
   exit 1
