@@ -3,6 +3,18 @@ version: 2.1
 orbs:
   docker: circleci/docker@1.7.0
 
+jobs:
+  check_orbs:
+    docker:
+      - image: kelvintaywl/circleci-orb-version-check
+    environment:
+      CIRCLE_WORKING_DIRECTORY: /home/circleci/project
+    steps:
+      - checkout
+      - run:
+          command: |
+            /tmp/orb-version-check.sh
+
 workflows:
   version: 2
   docker_deploy:
@@ -13,3 +25,8 @@ workflows:
           tag: "${CIRCLE_SHA1},latest"
           image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
           context: docker
+      # dogfood; we check our own CircleCI config
+      - check_orbs:
+          # so that we get the latest published Docker build
+          requires:
+            - docker/publish
