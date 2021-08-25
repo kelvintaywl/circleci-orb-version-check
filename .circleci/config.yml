@@ -2,8 +2,21 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@1.7.0
+  shellcheck: circleci/shellcheck@2.2.4
 
 jobs:
+  check_shell_scripts:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - shellcheck/install
+      - shellcheck/check:
+          shell: bash
+          pattern: '*.sh'
+          # shellcheck does not like `local` declarations
+          # https://github.com/koalaman/shellcheck/wiki/SC2155
+          exclude: 'SC2155,SC2181'
   check_orbs:
     docker:
       - image: kelvintaywl/circleci-orb-version-check
@@ -19,12 +32,15 @@ workflows:
   version: 2
   docker_deploy:
     jobs:
+      - check_shell_scripts
       - docker/publish:
           lint-dockerfile: true
           update-description: true
           tag: "${CIRCLE_SHA1},latest"
           image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
           context: docker
+          requires:
+            - check_shell_scripts
       # dogfood; we check our own CircleCI config
       - check_orbs:
           # so that we get the latest published Docker build
