@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  github-ssh-key: kelvintaywl/github-ssh-key-checkup@0.1.0
+  github-ssh-key: kelvintaywl/github-ssh-key-checkup@0.2
 
 jobs:
   check:
