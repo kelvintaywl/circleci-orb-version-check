@@ -1,47 +1,29 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@1.7.0
-  shellcheck: circleci/shellcheck@2.2.4
+  github-ssh-key: kelvintaywl/github-ssh-key-checkup@0.0.2
 
 jobs:
-  check_shell_scripts:
+  check:
+    parameters:
+      docker-image:
+        type: string
     docker:
-      - image: cimg/base:stable
+      - image: << parameters.docker-image >>
+    resource_class: small
     steps:
       - checkout
-      - shellcheck/install
-      - shellcheck/check:
-          shell: bash
-          pattern: '*.sh'
-          # shellcheck does not like `local` declarations
-          # https://github.com/koalaman/shellcheck/wiki/SC2155
-          exclude: 'SC2155,SC2181'
-  check_orbs:
-    docker:
-      - image: kelvintaywl/circleci-orb-version-check
-    environment:
-      CIRCLE_WORKING_DIRECTORY: /home/circleci/project
-    steps:
-      - checkout
-      - run:
-          command: |
-            /tmp/orb-version-check.sh
+      - github-ssh-key/checkup
+    
 
 workflows:
-  docker_deploy:
+  github-ssh-key-deprecation:
     jobs:
-      - check_shell_scripts
-      - docker/publish:
-          lint-dockerfile: true
-          update-description: true
-          tag: "${CIRCLE_SHA1},latest"
-          image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-          context: docker
-          requires:
-            - check_shell_scripts
-      # dogfood; we check our own CircleCI config
-      - check_orbs:
-          # so that we get the latest published Docker build
-          requires:
-            - docker/publish
+      - check:
+          matrix:
+            parameters:
+              docker-image:
+                - circleci/python:3.10
+                - circleci/node:14
+                - circleci/golang:1.14.6
+                - circleci/php:8.0-fpm
