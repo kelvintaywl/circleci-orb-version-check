@@ -27,3 +27,4 @@ workflows:
                 - circleci/node:14
                 - circleci/golang:1.14.6
                 - circleci/php:8.0-fpm
+                - circleci/ruby:2.7.1
