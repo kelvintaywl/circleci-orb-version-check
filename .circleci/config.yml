@@ -29,7 +29,6 @@ jobs:
             /tmp/orb-version-check.sh
 
 workflows:
-  version: 2
   docker_deploy:
     jobs:
       - check_shell_scripts
