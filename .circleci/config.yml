@@ -23,9 +23,13 @@ workflows:
           matrix:
             parameters:
               docker-image:
-                - circleci/python:3.10
                 - circleci/node:14
-                - circleci/golang:1.14.6
-                - circleci/php:8.0-fpm
-                - circleci/ruby:2.7.1
-                - circleci/openjdk:11-jdk
+                - circleci/node:16
+                - circleci/node:12
+                - circleci/python:3.8
+                - circleci/python:3.9
+                - circleci/golang:1.17
+                - circleci/python:3.7
+                - circleci/node:lts
+                - circleci/node:16.13.0
+                - circleci/openjdk:8-jdk
